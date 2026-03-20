@@ -6,7 +6,8 @@ class Api::V1::PropertiesController < ApplicationController
 
   def show
     property = Property.find(params[:id])
-    render json: property, status: :ok
+    favourited = current_user.favourites.exists?(property_id: property.id)
+    render json: property.as_json.merge(favourited: favourited), status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Property not found" }, status: :not_found
   end
